@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from transformers import MBart50TokenizerFast
-from transformers import TimesformerModel, MBartForConditionalGeneration
+from transformers import TimesformerModel, MBartForConditionalGeneration, AutoModelForSeq2SeqLM, NllbTokenizerFast
 from transformers.modeling_outputs import BaseModelOutput
 from safetensors.torch import load_file
 
@@ -592,32 +592,12 @@ class VideoCaptioningModel(nn.Module):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Example placeholder
 class VideoCaptionModel:
     def __init__(self):
         
 
-        self.checkpoint = load_file(fr"C:\Users\sanje\Desktop\Video_Captioning_App\backend\model.safetensors")
+        self.checkpoint = load_file(fr"C:\Users\sanje\Desktop\Video_Captioning_App\backend\saved_model\model.safetensors")
         
         # Model Loading
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -627,6 +607,7 @@ class VideoCaptionModel:
         self.model.to(self.device)
         self.model.eval()
         self.tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50", src_lang = "ne_NP", tgt_lang = "ne_NP")
+        # self.tokenizer = NllbTokenizerFast.from_pretrained("facebook/nllb-200-distilled-600M", src_lang= "npi_Deva", tgt_lang="npi_Deva" )
         
 
     def generate_caption(self, video_tensor):
@@ -637,7 +618,7 @@ class VideoCaptionModel:
                 pixel_values=video_tensor,
                 max_length=50,
                 num_beams= 4,  
-                forced_bos_token_id=self.tokenizer.lang_code_to_id["ne_NP"],
+                forced_bos_token_id=self.tokenizer.convert_tokens_to_ids(["ne_NP"]),
                 num_return_sequences= 4,
                 # top_k = 50,
                 # top_p = 0.9,
