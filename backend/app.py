@@ -4,7 +4,8 @@ import shutil
 import os
 
 from video_utils import get_video_tensor
-from model import model
+
+from model import *
 
 app = FastAPI()
 
@@ -22,7 +23,23 @@ app.add_middleware(
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@app.post("/generate_caption/")
+# @app.post("/generate_caption_model1/")
+# async def generate_caption(file: UploadFile = File(...)):
+#     video_path = os.path.join(UPLOAD_DIR, file.filename)
+
+#     with open(video_path, "wb") as buffer:
+#         shutil.copyfileobj(file.file, buffer)
+    
+#     video_tensor = get_video_tensor(video_path)
+#     captions = model1.generate_caption(video_tensor)
+
+#     return {
+#         "filename": file.filename,
+#         "caption": captions
+#     }
+
+
+@app.post("/generate_caption_model2/")
 async def generate_caption(file: UploadFile = File(...)):
     video_path = os.path.join(UPLOAD_DIR, file.filename)
 
@@ -30,7 +47,7 @@ async def generate_caption(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     
     video_tensor = get_video_tensor(video_path)
-    captions = model.generate_caption(video_tensor)
+    captions = model2.generate_caption(video_tensor)
 
     return {
         "filename": file.filename,
@@ -38,6 +55,20 @@ async def generate_caption(file: UploadFile = File(...)):
     }
 
 
+# @app.post("/generate_caption_model3/")
+# async def generate_caption(file: UploadFile = File(...)):
+#     video_path = os.path.join(UPLOAD_DIR, file.filename)
+
+#     with open(video_path, "wb") as buffer:
+#         shutil.copyfileobj(file.file, buffer)
+    
+#     video_tensor = get_video_tensor(video_path)
+#     captions = model3.generate_caption(video_tensor)
+
+#     return {
+#         "filename": file.filename,
+#         "caption": captions
+#     }
 
 
 
